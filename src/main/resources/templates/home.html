@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dental Profit App</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            background-color: #d8f3dc;
+            font-family: Arial, sans-serif;
+        }
+        .container {
+            text-align: center;
+            margin-top: 50px;
+        }
+        h1 {
+            font-size: 48px;
+            font-weight: bold;
+            color: #379683;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            margin-bottom: 20px;
+        }
+        table {
+            border-collapse: collapse;
+            width: 50%;
+            margin: 20px auto;
+            background-color: #edf6e5;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+            color: #379683;
+        }
+        th {
+            background-color: #dff2c2;
+        }
+        input[type="text"],
+        input[type="number"] {
+            width: calc(100% - 20px);
+            padding: 5px;
+            margin: 5px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+        input[type="text"]:focus,
+        input[type="number"]:focus {
+            outline: none;
+            border-color: #379683;
+        }
+        canvas {
+            margin-top: 50px;
+            width: 80%;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .button-container {
+            margin-top: 20px;
+        }
+        .button {
+            background-color: #379683;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 20px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .button:hover {
+            background-color: #2a7a63;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1 style="font-family: 'Times New Roman', Times, serif;">Dental Profit App</h1>
+    <div class="button-container">
+        <button class="button" onclick="addDoctor()">Add Doctor</button>
+        <button class="button" onclick="showLastThreeMonths()">Last 3 Months</button>
+        <button class="button" onclick="showAnnualData()">Annual</button>
+    </div>
+    <table id="dataTable">
+        <thead>
+        <tr>
+            <th>Date</th>
+            <th>Doctor</th>
+            <th>Amount</th>
+            <th>Hours</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td><input type="text" name="data" placeholder="Enter date"></td>
+            <td><input type="text" name="lekarz" placeholder="Enter doctor"></td>
+            <td><input type="number" name="kwota" placeholder="Enter amount"></td>
+            <td><input type="number" name="godziny" placeholder="Enter hours"></td>
+        </tr>
+        </tbody>
+    </table>
+    <canvas id="myChart"></canvas>
+</div>
+
+<script>
+    var data = {
+        labels: ["Doctor 1", "Doctor 2", "Doctor 3", "Doctor 4", "Doctor 5"],
+        datasets: [{
+            label: 'Amount collected by doctors in the month',
+            data: [5000, 7000, 2000, 3500, 4000],
+            backgroundColor: [
+                'rgba(255, 99, 132, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(255, 206, 86, 0.2)',
+                'rgba(75, 192, 192, 0.2)',
+                'rgba(153, 102, 255, 0.2)'
+            ],
+            borderColor: [
+                'rgba(255, 99, 132, 1)',
+                'rgba(54, 162, 235, 1)',
+                'rgba(255, 206, 86, 1)',
+                'rgba(75, 192, 192, 1)',
+                'rgba(153, 102, 255, 1)'
+            ],
+            borderWidth: 1
+        }]
+    };
+
+    var ctx = document.getElementById('myChart').getContext('2d');
+    var myChart = new Chart(ctx, {
+        type: 'bar',
+        data: data,
+        options: {
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero: true
+                    }
+                }]
+            }
+        }
+    });
+
+    function addDoctor() {
+        var table = document.getElementById('dataTable').getElementsByTagName('tbody')[0];
+        var newRow = table.insertRow(table.rows.length);
+        var cols = [];
+
+        // Puste komórki dla nowego wiersza
+        for (var i = 0; i < 4; i++) {
+            cols.push(newRow.insertCell(i));
+            cols[i].innerHTML = '<input type="text">';
+        }
+    }
+
+    function showLastThreeMonths() {
+        // Aktualizuj dane wykresu dla ostatnich trzech miesięcy
+        // W tym miejscu można zaimplementować logikę pobierania danych z ostatnich trzech miesięcy
+        // Następnie zaktualizuj etykiety i dane dla wykresu
+    }
+
+    function showAnnualData() {
+        // Aktualizuj dane wykresu na podstawie danych rocznych
+        // W tym miejscu można zaimplementować logikę pobierania danych z całego roku
+        // Następnie zaktualizuj etykiety i dane dla wykresu
+    }
+
+    document.getElementById('dataTable').addEventListener('change', function() {
+        var table = document.getElementById('dataTable');
+        var rows = table.getElementsByTagName('tr');
+        data.labels = [];
+        data.datasets[0].data = [];
+        for (var i = 1; i < rows.length; i++) {
+            var cols = rows[i].getElementsByTagName('input');
+            data.labels.push(cols[1].value);
+            data.datasets[0].data.push(parseInt(cols[2].value));
+        }
+        myChart.update();
+    });
+</script>
+</body>
+</html>

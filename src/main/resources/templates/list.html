@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>List of Doctors</title>
+    <style>
+        body {
+            background-color: #d8f3dc;
+            font-family: Arial, sans-serif;
+        }
+        .container {
+            text-align: center;
+            margin-top: 50px;
+        }
+        h1 {
+            font-size: 48px;
+            font-weight: bold;
+            color: #379683;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            margin-bottom: 20px;
+        }
+        table {
+            border-collapse: collapse;
+            width: 80%;
+            margin: 20px auto;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+            color: #379683;
+        }
+        th {
+            background-color: #dff2c2;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1 style="font-family: 'Times New Roman', Times, serif;">List of Doctors</h1>
+    <h2><?php echo date('F Y'); ?></h2> <!-- Dodany nagłówek z aktualnym miesiącem -->
+    <table>
+        <thead>
+        <tr>
+            <th>Doctor</th>
+            <th>Hours Worked</th>
+            <th>Earned Amount</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td>Doctor 1</td>
+            <td>40</td>
+            <td>$1000</td>
+        </tr>
+        <tr>
+            <td>Doctor 2</td>
+            <td>35</td>
+            <td>$900</td>
+        </tr>
+        <tr>
+            <td>Doctor 3</td>
+            <td>45</td>
+            <td>$1200</td>
+        </tr>
+        <!-- You can add more data here -->
+        </tbody>
+    </table>
+</div>
+</body>
+</html>
