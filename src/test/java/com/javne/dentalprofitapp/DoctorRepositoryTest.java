@@ -20,8 +20,8 @@ public class DoctorRepositoryTest {
 
     @Test
     public void testGetByName() {
-        Doctor doctor = doctorRepository.getByName("Dr. Johnson").orElse(null);
+        Doctor doctor = doctorRepository.getByName("Dr.Kwaśniewska").orElse(null);
         assertNotNull(doctor);
-        assertEquals("Dr. Johnson", doctor.getName());
+        assertEquals("Dr.Kwaśniewska", doctor.getName());
     }
 }
