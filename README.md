@@ -1,10 +1,8 @@
 # DentalProfitApp
 
-DentalProfitApp jest aplikacją służącą do zbierania danych na temat dziennego zarobku lekarza w przeliczeniu na ilość przepracowanych godzin. 
-Aplikacja pozwala na wizualizację danych z każdego miesiąca oraz prezentuje lekarza z największym utargiem na wykresie. 
-Dzięki tej aplikacji możemy analizować, którzy lekarze przynoszą nam największy profit, zarówno miesiąc po miesiącu, jak i w podsumowaniu rocznym.
+DentalProfitApp is an application designed to collect data about a doctor's daily earnings in relation to the number of hours worked. The application allows for visualization of data from each month and presents the doctor with the highest earnings on a chart. With this application, we can analyze which doctors bring us the highest profit, both month by month and in the annual summary.
 
-## Technologie
+## Technologies
 
 - Java
 - Spring Boot
@@ -12,17 +10,20 @@ Dzięki tej aplikacji możemy analizować, którzy lekarze przynoszą nam najwi�
 - Maven
 - Docker
 - Lombok
+- Thymeleaf
+- HTML
+- CSS
 - REST API
 
-## Funkcje
+## Features
 
-- Zbieranie danych o dziennym zarobku lekarza.
-- Przeliczanie zarobku na ilość przepracowanych godzin.
-- Prezentacja danych z każdego miesiąca.
-- Wyświetlanie lekarza z największym utargiem na wykresie.
-- Analiza lekarzy przynoszących największy profit.
+- Collecting data on a doctor's daily earnings.
+- Converting earnings into the number of hours worked.
+- Presentation of data from each month.
+- Displaying the doctor with the highest earnings on a chart.
+- Analysis of doctors bringing the highest profit.
 
-## Wymagania
+## Requirements
 
 - Java 8+
 - Spring Boot
@@ -30,47 +31,46 @@ Dzięki tej aplikacji możemy analizować, którzy lekarze przynoszą nam najwi�
 - Maven
 - Docker
 - Lombok
-- Biblioteka do interfejsu użytkownika (opcjonalnie)
+- Thymeleaf
+- HTML
+- CSS
+- UI library (optional)
 
-## Instalacja i Uruchomienie
+## Installation and Running
 
-1. Sklonuj repozytorium:
+1. Clone the repository:
 
-git clone https://github.com/javne/DentalProfitApp.git
+   git clone https://github.com/javne/DentalProfitApp.git
 
-2. Przejdź do katalogu z projektem:
+2. Navigate to the project directory:
 
-cd DentalProfitApp
+   cd DentalProfitApp
 
-3. Uruchom aplikację za pomocą Maven:
+3. Run the application using Maven:
    
-mvn spring-boot:run
+   mvn spring-boot:run
 
 
-4. (Opcjonalnie) Możesz zbudować obraz Dockera i uruchomić aplikację w kontenerze:
+5. (Optional) You can build a Docker image and run the application in a container:
 
-docker build -t dental-profit-app .
-docker run -p 8080:8080 dental-profit-app
+   docker build -t dental-profit-app .
+   docker run -p 8080:8080 dental-profit-app
 
+## Contributions
 
-## Kontrybucje
+If you would like to contribute your fixes or features to the application, feel free to contribute. Please adhere to coding standards and clearly describe the changes to facilitate the code review process.
 
-Jeśli chcesz wnieść swoje poprawki lub funkcjonalności do aplikacji, zapraszamy do kontrybucji. Prosimy o przestrzeganie standardów kodowania i wyraźne opisanie zmian, aby ułatwić proces przeglądu kodu.
+1. Start by forking the repository.
+2. Create a new branch (`git checkout -b new-branch`).
+3. Make your changes.
+4. Commit your changes (`git commit -am 'Add new feature'`).
+5. Push the changes to the branch (`git push origin new-branch`).
+6. Create a new Pull Request.
 
-1. Rozpocznij od zforkowania repozytorium.
-2. Stwórz nowy branch (`git checkout -b nowy-branch`).
-3. Wprowadź swoje zmiany.
-4. Zrób commit (`git commit -am 'Dodano nową funkcjonalność'`).
-5. Wypchnij zmiany do brancha (`git push origin nowy-branch`).
-6. Stwórz nowego Pull Requesta.
-
-## Autorzy
+## Authors
 
 - Ewelina Borkowska - [Javne](https://github.com/Javne)
 
-## Licencja
+## License
 
-Ten projekt jest objęty licencją [DentalProfitAPP.licence]. Zobacz plik [LICENSE.md](LICENSE.md) dla szczegółów.
-
-
-
+This project is licensed under the [DentalProfitAPP License]. See the [LICENSE.md](LICENSE.md) file for details.
