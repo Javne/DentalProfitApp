@@ -1,11 +1,13 @@
 package com.javne.dentalprofitapp;
 
-import com.javne.dentalprofitapp.repository.DoctorRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
@@ -13,9 +15,13 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 public class DoctorRepositoryTest {
 
+    @Autowired
+    private DoctorRepository doctorRepository;
+
     @Test
     public void testGetByName() {
-
-
+        Doctor doctor = doctorRepository.getByName("Dr. Johnson").orElse(null);
+        assertNotNull(doctor);
+        assertEquals("Dr. Johnson", doctor.getName());
     }
 }
