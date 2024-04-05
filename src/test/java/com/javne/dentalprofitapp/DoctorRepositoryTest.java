@@ -1,5 +1,7 @@
 package com.javne.dentalprofitapp;
 
+import com.javne.dentalprofitapp.entity.Doctor;
+import com.javne.dentalprofitapp.repository.DoctorRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;

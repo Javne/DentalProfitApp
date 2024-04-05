@@ -1,6 +1,6 @@
-package com.javne.dentalprofitapp;
+package com.javne.dentalprofitapp.repository;
 
-
+import com.javne.dentalprofitapp.entity.Doctor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
@@ -60,5 +60,4 @@ public class DoctorRepository {
     public void deleteById(int id) {
         jdbcTemplate.update("DELETE FROM doctor WHERE id=?", id);
     }
-
 }

@@ -1,5 +1,7 @@
-package com.javne.dentalprofitapp;
+package com.javne.dentalprofitapp.controller;
 
+import com.javne.dentalprofitapp.repository.DoctorRepository;
+import com.javne.dentalprofitapp.entity.Doctor;
 import io.micrometer.common.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

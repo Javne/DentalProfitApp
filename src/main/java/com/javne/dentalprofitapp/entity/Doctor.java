@@ -1,4 +1,4 @@
-package com.javne.dentalprofitapp;
+package com.javne.dentalprofitapp.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
