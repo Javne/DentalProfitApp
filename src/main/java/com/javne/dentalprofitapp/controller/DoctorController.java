@@ -48,7 +48,18 @@ public class DoctorController {
 
     @PostMapping("/addDoctor")
     public ResponseEntity<String> addDoctor(@RequestBody Doctor doctor) {
-        doctorRepository.save(doctor);
+        Doctor deletedDoctor = doctorRepository.findFirstDeletedDoctorOrderByDateAsc();
+        if (deletedDoctor != null) {
+            deletedDoctor.setDate(doctor.getDate());
+            deletedDoctor.setName(doctor.getName());
+            deletedDoctor.setAmount(doctor.getAmount());
+            deletedDoctor.setHours(doctor.getHours());
+            deletedDoctor.setDeleted(false);
+            doctorRepository.save(deletedDoctor);
+        } else {
+            doctorRepository.save(doctor);
+        }
+
         return ResponseEntity.ok("Doctor added successfully");
     }
 
@@ -78,6 +89,7 @@ public class DoctorController {
             return ResponseEntity.notFound().build();
         }
     }
+
 
     @DeleteMapping("/byId/{id}")
     public ResponseEntity<String> deleteDoctorById(@PathVariable int id) {

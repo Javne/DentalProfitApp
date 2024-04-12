@@ -22,7 +22,7 @@ public class DoctorRepositoryTest {
 
     @Test
     public void testGetByName() {
-        Doctor doctor = doctorRepository.getByName("Dr.Kwaśniewska").orElse(null);
+        Doctor doctor = doctorRepository.findByName("Dr.Kwaśniewska").orElse(null);
         assertNotNull(doctor);
         assertEquals("Dr.Kwaśniewska", doctor.getName());
     }
