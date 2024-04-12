@@ -1,13 +1,12 @@
 package com.javne.dentalprofitapp.controller;
 
-import com.javne.dentalprofitapp.repository.DoctorRepository;
 import com.javne.dentalprofitapp.entity.Doctor;
-import io.micrometer.common.util.StringUtils;
+import com.javne.dentalprofitapp.repository.DoctorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -15,40 +14,36 @@ import java.util.Optional;
 @RequestMapping("/doctors")
 public class DoctorController {
 
+    private final DoctorRepository doctorRepository;
+
     @Autowired
-    DoctorRepository doctorRepository;
+    public DoctorController(DoctorRepository doctorRepository) {
+        this.doctorRepository = doctorRepository;
+    }
 
     @GetMapping("")
-    public List<Doctor> getAll() {
-        return doctorRepository.getAll();
+    public List<Doctor> getAllDoctors() {
+        return doctorRepository.findAll();
     }
 
     @GetMapping("/byName/{name}")
-    public ResponseEntity<Doctor> getDoctorByName(@PathVariable("name") String name) {
-        Optional<Doctor> optionalDoctor = doctorRepository.getByName(name);
-        if (optionalDoctor.isPresent()) {
-            return ResponseEntity.ok(optionalDoctor.get());
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+    public ResponseEntity<Doctor> getDoctorByName(@PathVariable String name) {
+        Optional<Doctor> optionalDoctor = doctorRepository.findByName(name);
+        return optionalDoctor.map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @GetMapping("/byId/{id}")
-    public ResponseEntity<Doctor> getById(@PathVariable("id") int id) {
-        Optional<Doctor> optionalDoctor = doctorRepository.getById(id);
-        if (optionalDoctor.isPresent()) {
-            return ResponseEntity.ok(optionalDoctor.get());
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+    public ResponseEntity<Doctor> getDoctorById(@PathVariable int id) {
+        Optional<Doctor> optionalDoctor = doctorRepository.findById(id);
+        return optionalDoctor.map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @PostMapping("")
-    public List<Doctor> add(@RequestBody List<Doctor> doctors) {
-        for (Doctor doctor : doctors) {
-            doctorRepository.save(doctor);
-        }
-        return new ArrayList<>(doctors);
+    public ResponseEntity<List<Doctor>> addDoctors(@RequestBody List<Doctor> doctors) {
+        List<Doctor> savedDoctors = doctorRepository.saveAll(doctors);
+        return ResponseEntity.status(HttpStatus.CREATED).body(savedDoctors);
     }
 
     @PostMapping("/addDoctor")
@@ -57,65 +52,40 @@ public class DoctorController {
         return ResponseEntity.ok("Doctor added successfully");
     }
 
-
     @PutMapping("/byName/{name}")
-    public String update(@PathVariable("name") String name, @RequestBody Doctor updatedDoctor) {
-        Optional<Doctor> optionalDoctor = doctorRepository.getByName(name);
+    public ResponseEntity<String> updateDoctor(@PathVariable String name, @RequestBody Doctor updatedDoctor) {
+        Optional<Doctor> optionalDoctor = doctorRepository.findByName(name);
         if (optionalDoctor.isPresent()) {
             Doctor doctor = optionalDoctor.get();
             doctor.setName(updatedDoctor.getName());
             doctor.setDate(updatedDoctor.getDate());
             doctor.setAmount(updatedDoctor.getAmount());
             doctor.setHours(updatedDoctor.getHours());
-            doctorRepository.update(doctor);
-            return "Doctor updated";
+            doctorRepository.save(doctor);
+            return ResponseEntity.ok("Doctor updated");
         } else {
-            return "Doctor does not exist in DB";
-        }
-    }
-
-    @PatchMapping("/byName/{name}")
-    public String partiallyUpdated(@PathVariable("name") String name, @RequestBody Doctor updatedDoctor) {
-        Optional<Doctor> optionalDoctor = doctorRepository.getByName(name);
-        if (optionalDoctor.isPresent()) {
-            Doctor doctor = optionalDoctor.get();
-            if (StringUtils.isNotEmpty(updatedDoctor.getName())) {
-                doctor.setName(updatedDoctor.getName());
-            }
-            if (updatedDoctor.getAmount() != null) {
-                doctor.setAmount(updatedDoctor.getAmount());
-            }
-            if (updatedDoctor.getHours() != 0) {
-                doctor.setHours(updatedDoctor.getHours());
-            }
-            doctorRepository.update(doctor);
-            return "Doctor updated";
-        } else {
-            return "Doctor does not exist in DB";
+            return ResponseEntity.notFound().build();
         }
     }
 
     @DeleteMapping("/byName/{name}")
-    public String delete(@PathVariable("name") String name) {
-        Optional<Doctor> optionalDoctor = doctorRepository.getByName(name);
+    public ResponseEntity<String> deleteDoctorByName(@PathVariable String name) {
+        Optional<Doctor> optionalDoctor = doctorRepository.findByName(name);
         if (optionalDoctor.isPresent()) {
             doctorRepository.delete(optionalDoctor.get());
-            return "Doctor deleted";
+            return ResponseEntity.ok("Doctor deleted");
         } else {
-            return "Doctor with name " + name + " not found";
+            return ResponseEntity.notFound().build();
         }
     }
 
     @DeleteMapping("/byId/{id}")
-    public String deleteById(@PathVariable("id") int id) {
-        Optional<Doctor> optionalDoctor = doctorRepository.getById(id);
-        if (optionalDoctor.isPresent()) {
+    public ResponseEntity<String> deleteDoctorById(@PathVariable int id) {
+        if (doctorRepository.existsById(id)) {
             doctorRepository.deleteById(id);
-            return "Doctor deleted";
+            return ResponseEntity.ok("Doctor deleted");
         } else {
-            return "Doctor with id " + id + " not found";
+            return ResponseEntity.notFound().build();
         }
     }
-
-
 }

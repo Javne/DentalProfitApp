@@ -1,18 +1,21 @@
 package com.javne.dentalprofitapp.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import lombok.*;
 
 import java.math.BigDecimal;
 import java.util.Date;
 
 
-@Data
-@NoArgsConstructor
+@Entity
 @AllArgsConstructor
+@NoArgsConstructor
+@Getter
+@Setter
 
 public class Doctor {
+    @Id
     private int id;
     private Date date;
     private String name;
