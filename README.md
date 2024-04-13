@@ -6,7 +6,7 @@ DentalProfitApp is an application designed to collect data about a doctor's dail
 
 - Java
 - Spring Boot
-- MySQL
+- PostgreSQL
 - Maven
 - Docker
 - Lombok
@@ -27,7 +27,7 @@ DentalProfitApp is an application designed to collect data about a doctor's dail
 
 - Java 8+
 - Spring Boot
-- MySQL
+- PostgreSQL
 - Maven
 - Docker
 - Lombok
