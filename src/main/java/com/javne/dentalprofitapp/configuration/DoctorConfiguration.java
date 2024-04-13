@@ -17,28 +17,31 @@ public class DoctorConfiguration {
 
     @Bean
     public CommandLineRunner commandLineRunner(DoctorRepository repository) {
-        return args -> {Doctor doctor1 = new Doctor();
-            doctor1.setDate(new Date());
-            doctor1.setName("Dr. Smith");
-            doctor1.setAmount(BigDecimal.valueOf(1000));
-            doctor1.setHours(40.0);
+        return args -> {
+            var doctor1 = Doctor.builder()
+                    .date(new Date())
+                    .name("Dr. Smith")
+                    .amount(BigDecimal.valueOf(1000))
+                    .hours(40.0)
+                    .build();
 
-            Doctor doctor2 = new Doctor();
-            doctor2.setDate(new Date());
-            doctor2.setName("Dr. Johnson");
-            doctor2.setAmount(BigDecimal.valueOf(1200));
-            doctor2.setHours(45.5);
+            var doctor2 = Doctor.builder()
+                    .date(new Date())
+                    .name("Dr. Johnson")
+                    .amount(BigDecimal.valueOf(1200))
+                    .hours(45.5)
+                    .build();
 
-            Doctor doctor3 = new Doctor();
-            doctor3.setDate(new Date());
-            doctor3.setName("Dr. Williams");
-            doctor3.setAmount(BigDecimal.valueOf(1500));
-            doctor3.setHours(50.0);
+            var doctor3 = Doctor.builder()
+                    .date(new Date())
+                    .name("Dr. Williams")
+                    .amount(BigDecimal.valueOf(1500))
+                    .hours(50.0)
+                    .build();
 
             repository.save(doctor1);
             repository.save(doctor2);
             repository.save(doctor3);
-
         };
     }
 }
