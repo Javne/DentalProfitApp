@@ -15,7 +15,10 @@ import java.util.Date;
 @Setter
 public class Doctor {
     @Id
-    @GeneratedValue
+    @GeneratedValue(
+            strategy = GenerationType.SEQUENCE,
+            generator = "doctor_sequence"
+    )
     @SequenceGenerator(
             name = "doctor_sequence",
             sequenceName = "doctor_sequence",
