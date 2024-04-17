@@ -34,6 +34,10 @@ public class DoctorController {
     public String getBestPaidDoctorPerHour(Model model) {
         Optional<Doctor> bestPaidDoctor = doctorRepository.findBestPaidDoctorPerHour();
         bestPaidDoctor.ifPresent(doctor -> model.addAttribute("bestPaidDoctor", doctor));
+
+        List<Doctor> doctors = doctorRepository.findAll();
+        model.addAttribute("doctors", doctors); // Dodaj ten wiersz
+
         return "home";
     }
 

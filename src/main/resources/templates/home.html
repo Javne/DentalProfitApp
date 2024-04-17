@@ -28,6 +28,7 @@
             background-color: #edf6e5;
             border-radius: 10px;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            display: none; /* Lista lekarzy domyślnie ukryta */
         }
         th, td {
             border: 1px solid #ddd;
@@ -67,9 +68,10 @@
             color: white;
             border: none;
             border-radius: 5px;
-            padding: 10px 20px;
+            padding: 15px 30px; /* Zwiększenie paddingu */
             cursor: pointer;
             transition: background-color 0.3s ease;
+            margin-top: 20px; /* Dodatkowy margines u góry */
         }
         .button:hover {
             background-color: #2a7a63;
@@ -80,7 +82,7 @@
 <div class="container">
     <h1 style="font-family: 'Times New Roman', Times, serif;">Dental Profit App</h1>
     <div class="button-container">
-        <button class="button" onclick="addDoctor()">Add Doctor</button>
+        <button class="button" onclick="toggleDoctorList()">Show Doctors List</button>
         <button class="button" onclick="showLastThreeMonths()">Last 3 Months</button>
         <button class="button" onclick="showAnnualData()">Annual</button>
     </div>
@@ -95,7 +97,7 @@
         </tr>
         </thead>
         <tbody>
-        <!-- Iteracja przez listę lekarzy zwróconą przez kontroler -->
+        <!-- Iteracja przez posortowaną listę lekarzy -->
         <tr th:each="doctor : ${doctors}">
             <!-- Dynamiczne wypełnienie danych dla każdego lekarza -->
             <td><input type="text" th:value="${doctor.date}" name="data" placeholder="Enter date"></td>
@@ -107,6 +109,16 @@
         </tr>
         </tbody>
     </table>
+    <button class="button" onclick="showAddDoctorForm()">Add Doctor</button>
+    <div id="addDoctorForm" style="display: none;">
+        <h2>Add New Doctor</h2>
+        <form onsubmit="event.preventDefault(); addDoctor()">
+            <input type="text" id="newDoctorName" placeholder="Doctor Name"><br>
+            <input type="number" id="newDoctorAmount" placeholder="Amount"><br>
+            <input type="number" id="newDoctorHours" placeholder="Hours"><br>
+            <button type="submit" class="button">Add</button>
+        </form>
+    </div>
     <canvas id="myChart"></canvas>
     <div id="bestPaidDoctorInfo"></div> <!-- Dodane miejsce na wyświetlenie informacji o najlepiej opłacanym lekarzu na godzinę -->
 </div>
@@ -131,11 +143,15 @@
     var amounts = /*[[${doctors.![amount]}]]*/;
     var hourlyRates = /*[[${doctors.![amount div hours]}]]*/; // Nowa tablica na stawki godzinowe
 
+    // Sortowanie lekarzy po stawce godzinowej (od największej do najmniejszej)
+    var sortedDoctors = [...labels.map((_, index) => ({ name: labels[index], amount: amounts[index], hours: hourlyRates[index] }))]
+        .sort((a, b) => b.hours - a.hours);
+
     var data = {
-        labels: labels,
+        labels: sortedDoctors.map(doctor => doctor.name), // Użyj posortowanej listy lekarzy
         datasets: [{
             label: 'Amount collected by doctors in the month',
-            data: amounts,
+            data: sortedDoctors.map(doctor => doctor.amount), // Użyj posortowanych kwot
             backgroundColor: [
                 'rgba(255, 99, 132, 0.2)',
                 'rgba(54, 162, 235, 0.2)',
@@ -170,14 +186,37 @@
     });
 
     function addDoctor() {
-        var table = document.getElementById('dataTable').getElementsByTagName('tbody')[0];
-        var newRow = table.insertRow(table.rows.length);
-        var cols = [];
+        var name = document.getElementById('newDoctorName').value;
+        var amount = document.getElementById('newDoctorAmount').value;
+        var hours = document.getElementById('newDoctorHours').value;
 
-        // Puste komórki dla nowego wiersza
-        for (var i = 0; i < 5; i++) { // Zmiana z 4 na 5
-            cols.push(newRow.insertCell(i));
-            cols[i].innerHTML = '<input type="text">';
+        // Walidacja danych
+        if (name && amount && hours) {
+            var table = document.getElementById('dataTable').getElementsByTagName('tbody')[0];
+            var newRow = table.insertRow(table.rows.length);
+            var cols = [];
+
+            // Wypełnienie danych dla nowego wiersza
+            cols.push(newRow.insertCell(0));
+            cols.push(newRow.insertCell(1));
+            cols.push(newRow.insertCell(2));
+            cols.push(newRow.insertCell(3));
+            cols.push(newRow.insertCell(4));
+
+            cols[0].innerHTML = '<input type="text" value="' + new Date().toISOString().split('T')[0] + '" name="data" placeholder="Enter date">';
+            cols[1].innerHTML = '<input type="text" value="' + name + '" name="lekarz" placeholder="Enter doctor">';
+            cols[2].innerHTML = '<input type="number" value="' + amount + '" name="kwota" placeholder="Enter amount">';
+            cols[3].innerHTML = '<input type="number" value="' + hours + '" name="godziny" placeholder="Enter hours">';
+            cols[4].innerHTML = amount / hours;
+
+            // Czyszczenie formularza
+            document.getElementById('newDoctorName').value = '';
+            document.getElementById('newDoctorAmount').value = '';
+            document.getElementById('newDoctorHours').value = '';
+
+            myChart.update(); // Aktualizacja wykresu
+        } else {
+            alert('Please fill in all fields.');
         }
     }
 
@@ -193,6 +232,26 @@
         // Następnie zaktualizuj etykiety i dane dla wykresu
     }
 
+    // Funkcja do wyświetlania/zamykania listy lekarzy
+    function toggleDoctorList() {
+        var table = document.getElementById('dataTable');
+        if (table.style.display === 'none') {
+            table.style.display = 'table';
+        } else {
+            table.style.display = 'none';
+        }
+    }
+
+    // Funkcja do wyświetlania formularza dodawania lekarza
+    function showAddDoctorForm() {
+        var addDoctorForm = document.getElementById('addDoctorForm');
+        if (addDoctorForm.style.display === 'none') {
+            addDoctorForm.style.display = 'block';
+        } else {
+            addDoctorForm.style.display = 'none';
+        }
+    }
+
     document.getElementById('dataTable').addEventListener('change', function() {
         var table = document.getElementById('dataTable');
         var rows = table.getElementsByTagName('tr');
@@ -205,6 +264,11 @@
         }
         myChart.update();
     });
+
+    // Wywołaj funkcję toggleDoctorList() po załadowaniu strony
+    window.onload = function() {
+        toggleDoctorList();
+    };
 </script>
 </body>
 </html>
