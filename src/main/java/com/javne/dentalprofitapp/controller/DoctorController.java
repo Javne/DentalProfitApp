@@ -21,6 +21,13 @@ public class DoctorController {
         this.doctorRepository = doctorRepository;
     }
 
+    @GetMapping("/bestPaidPerHour")
+    public ResponseEntity<Doctor> getBestPaidDoctorPerHour() {
+        Optional<Doctor> bestPaidDoctor = doctorRepository.findBestPaidDoctorPerHour();
+        return bestPaidDoctor.map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
     @GetMapping("")
     public List<Doctor> getAllDoctors() {
         return doctorRepository.findAll();

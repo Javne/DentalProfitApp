@@ -11,8 +11,7 @@ import java.util.Date;
 @Table
 @AllArgsConstructor
 @NoArgsConstructor
-@Getter
-@Setter
+@Data
 @Builder
 public class Doctor {
     @Id
@@ -42,4 +41,5 @@ public class Doctor {
         this.amount = amount;
         this.hours = hours;
     }
+
 }

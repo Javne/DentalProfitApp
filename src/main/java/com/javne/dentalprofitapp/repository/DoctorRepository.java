@@ -18,6 +18,9 @@ public interface DoctorRepository extends JpaRepository<Doctor, Integer> {
     @Query("SELECT d FROM Doctor d WHERE d.deleted = true ORDER BY d.date ASC")
     Doctor findFirstDeletedDoctorOrderByDateAsc();
 
+    @Query(value = "SELECT d FROM Doctor d WHERE d.deleted = false ORDER BY (d.amount / d.hours) DESC")
+    Optional<Doctor> findBestPaidDoctorPerHour();
+
 }
 
 
