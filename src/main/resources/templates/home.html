@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -91,26 +91,51 @@
             <th>Doctor</th>
             <th>Amount</th>
             <th>Hours</th>
+            <th>Hourly Rate</th> <!-- Nowa kolumna na stawkę godzinową -->
         </tr>
         </thead>
         <tbody>
-        <tr>
-            <td><input type="text" name="data" placeholder="Enter date"></td>
-            <td><input type="text" name="lekarz" placeholder="Enter doctor"></td>
-            <td><input type="number" name="kwota" placeholder="Enter amount"></td>
-            <td><input type="number" name="godziny" placeholder="Enter hours"></td>
+        <!-- Iteracja przez listę lekarzy zwróconą przez kontroler -->
+        <tr th:each="doctor : ${doctors}">
+            <!-- Dynamiczne wypełnienie danych dla każdego lekarza -->
+            <td><input type="text" th:value="${doctor.date}" name="data" placeholder="Enter date"></td>
+            <td><input type="text" th:value="${doctor.name}" name="lekarz" placeholder="Enter doctor"></td>
+            <td><input type="number" th:value="${doctor.amount}" name="kwota" placeholder="Enter amount"></td>
+            <td><input type="number" th:value="${doctor.hours}" name="godziny" placeholder="Enter hours"></td>
+            <!-- Nowa kolumna na stawkę godzinową, obliczaną dynamicznie -->
+            <td th:text="${doctor.amount div doctor.hours}"></td>
         </tr>
         </tbody>
     </table>
     <canvas id="myChart"></canvas>
+    <div id="bestPaidDoctorInfo"></div> <!-- Dodane miejsce na wyświetlenie informacji o najlepiej opłacanym lekarzu na godzinę -->
 </div>
 
-<script>
+<script th:inline="javascript">
+    var bestPaidDoctor = /*[[${bestPaidDoctor}]]*/; // Pobranie najlepiej opłacanego lekarza na godzinę z modelu
+
+    if (bestPaidDoctor) {
+        var bestPaidDoctorHtml = '<div><h3>Best Paid Doctor Per Hour</h3>' +
+                                  '<p>Name: ' + bestPaidDoctor.name + '</p>' +
+                                  '<p>Date: ' + bestPaidDoctor.date + '</p>' +
+                                  '<p>Amount: ' + bestPaidDoctor.amount + '</p>' +
+                                  '<p>Hours: ' + bestPaidDoctor.hours + '</p>' +
+                                  '</div>';
+
+        document.getElementById('bestPaidDoctorInfo').innerHTML = bestPaidDoctorHtml;
+    }
+</script>
+
+<script th:inline="javascript">
+    var labels = /*[[${doctors.![name]}]]*/; // Zmiana na nazwiska lekarzy
+    var amounts = /*[[${doctors.![amount]}]]*/;
+    var hourlyRates = /*[[${doctors.![amount div hours]}]]*/; // Nowa tablica na stawki godzinowe
+
     var data = {
-        labels: ["Doctor 1", "Doctor 2", "Doctor 3", "Doctor 4", "Doctor 5"],
+        labels: labels,
         datasets: [{
             label: 'Amount collected by doctors in the month',
-            data: [5000, 7000, 2000, 3500, 4000],
+            data: amounts,
             backgroundColor: [
                 'rgba(255, 99, 132, 0.2)',
                 'rgba(54, 162, 235, 0.2)',
@@ -150,7 +175,7 @@
         var cols = [];
 
         // Puste komórki dla nowego wiersza
-        for (var i = 0; i < 4; i++) {
+        for (var i = 0; i < 5; i++) { // Zmiana z 4 na 5
             cols.push(newRow.insertCell(i));
             cols[i].innerHTML = '<input type="text">';
         }

@@ -21,21 +21,21 @@ public class DoctorConfiguration {
             var doctor1 = Doctor.builder()
                     .date(new Date())
                     .name("Dr. Smith")
-                    .amount(BigDecimal.valueOf(1000))
+                    .amount(BigDecimal.valueOf(10000))
                     .hours(40.0)
                     .build();
 
             var doctor2 = Doctor.builder()
                     .date(new Date())
                     .name("Dr. Johnson")
-                    .amount(BigDecimal.valueOf(1200))
+                    .amount(BigDecimal.valueOf(12000))
                     .hours(45.5)
                     .build();
 
             var doctor3 = Doctor.builder()
                     .date(new Date())
                     .name("Dr. Williams")
-                    .amount(BigDecimal.valueOf(1500))
+                    .amount(BigDecimal.valueOf(15000))
                     .hours(50.0)
                     .build();
 

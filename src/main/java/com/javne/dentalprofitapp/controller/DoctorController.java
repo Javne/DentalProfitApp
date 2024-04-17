@@ -5,12 +5,14 @@ import com.javne.dentalprofitapp.repository.DoctorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
 
-@RestController
+@Controller
 @RequestMapping("/doctors")
 public class DoctorController {
 
@@ -20,13 +22,22 @@ public class DoctorController {
     public DoctorController(DoctorRepository doctorRepository) {
         this.doctorRepository = doctorRepository;
     }
+    @GetMapping("/home")
+    public String home(Model model) {
+        List<Doctor> doctors = doctorRepository.findAll();
+        model.addAttribute("doctors", doctors);
+        return "home";
+    }
+
 
     @GetMapping("/bestPaidPerHour")
-    public ResponseEntity<Doctor> getBestPaidDoctorPerHour() {
+    public String getBestPaidDoctorPerHour(Model model) {
         Optional<Doctor> bestPaidDoctor = doctorRepository.findBestPaidDoctorPerHour();
-        return bestPaidDoctor.map(ResponseEntity::ok)
-                .orElseGet(() -> ResponseEntity.notFound().build());
+        bestPaidDoctor.ifPresent(doctor -> model.addAttribute("bestPaidDoctor", doctor));
+        return "home";
     }
+
+
 
     @GetMapping("")
     public List<Doctor> getAllDoctors() {
