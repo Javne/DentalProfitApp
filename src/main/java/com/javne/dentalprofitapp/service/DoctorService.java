@@ -15,7 +15,17 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.math.BigDecimal;
 
-
+/*Klasa DoctorService
+Opis: Warstwa serwisowa do obsługi logiki biznesowej związanej z lekarzami.
+Metody:
+getAllDoctors(): Zwraca listę wszystkich lekarzy.
+findDoctorById(int id): Znajduje lekarza po identyfikatorze.
+addOrUpdateDoctor(Doctor doctor): Dodaje lub aktualizuje lekarza.
+deleteDoctorById(int id): Usuwa lekarza po identyfikatorze.
+getAllDoctorsSortedByHourlyRateDescending(): Zwraca listę wszystkich lekarzy posortowaną malejąco według stawki godzinowej.
+addDoctor(DoctorDTO doctorDTO): Dodaje nowego lekarza na podstawie obiektu DTO.
+findNextAvailableId(): Znajduje następny dostępny identyfikator lekarza.
+calculateHourlyRate(BigDecimal amount, double hours): Oblicza stawkę godzinową na podstawie kwoty i liczby godzin.*/
 
 @AllArgsConstructor
 @Service

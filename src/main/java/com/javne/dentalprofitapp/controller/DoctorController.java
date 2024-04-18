@@ -12,6 +12,11 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Optional;
 
+/*Klasa DoctorController
+Opis: Kontroler obsługujący zapytania dotyczące lekarzy.
+Metody:
+Metody obsługujące żądania HTTP: GET, POST, DELETE.*/
+
 @Controller
 @RequestMapping("/doctors")
 public class DoctorController {

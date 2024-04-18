@@ -1,4 +1,19 @@
 package com.javne.dentalprofitapp.entity;
+/*Klasa Doctor
+Opis: Reprezentuje lekarza w systemie.
+Pola:
+id: Identyfikator lekarza.
+date: Data zatrudnienia lekarza.
+name: Imię i nazwisko lekarza.
+amount: Kwota zarobiona przez lekarza.
+hours: Liczba godzin przepracowanych przez lekarza.
+hourlyRate: Stawka godzinowa lekarza.
+deleted: Flaga określająca, czy lekarz został usunięty.
+Metody:
+getHourlyRate(): Zwraca stawkę godzinową na podstawie kwoty i liczby godzin.
+setHourlyRate(BigDecimal hourlyRate): Ustawia stawkę godzinową.
+Inne standardowe metody dostępowe za pomoca lomboka(gettery, settery).*/
+
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
