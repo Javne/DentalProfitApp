@@ -6,6 +6,7 @@ DentalProfitApp is an application designed to collect data about a doctor's dail
 
 - Java
 - Spring Boot
+- Swagger
 - PostgreSQL
 - Maven
 - Docker
@@ -34,27 +35,31 @@ DentalProfitApp is an application designed to collect data about a doctor's dail
 - Thymeleaf
 - HTML
 - CSS
+- Swagger
 - UI library (optional)
 
 ## Installation and Running
 
 1. Clone the repository:
-
+   ```
    git clone https://github.com/javne/DentalProfitApp.git
+   ```
 
 2. Navigate to the project directory:
-
+   ```
    cd DentalProfitApp
+   ```
 
 3. Run the application using Maven:
-   
+   ```
    mvn spring-boot:run
+   ```
 
-
-5. (Optional) You can build a Docker image and run the application in a container:
-
+4. (Optional) You can build a Docker image and run the application in a container:
+   ```
    docker build -t dental-profit-app .
    docker run -p 8080:8080 dental-profit-app
+   ```
 
 ## Contributions
 
