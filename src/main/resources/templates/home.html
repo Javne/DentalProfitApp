@@ -251,43 +251,6 @@
             addDoctorForm.style.display = 'none';
         }
     }
-    function addDoctor() {
-    var name = document.getElementById('newDoctorName').value;
-    var amount = document.getElementById('newDoctorAmount').value;
-    var hours = document.getElementById('newDoctorHours').value;
-
-    if (name && amount && hours) {
-        var data = {
-            name: name,
-            amount: amount,
-            hours: hours
-        };
-
-        fetch('/addDoctor', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(data)
-        })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-            return response.json();
-        })
-        .then(data => {
-            // Obsługa odpowiedzi z serwera (jeśli potrzebna)
-            console.log('Doctor added successfully:', data);
-        })
-        .catch(error => {
-            console.error('Error adding doctor:', error);
-        });
-    } else {
-        alert('Please fill in all fields.');
-    }
-}
-
 
     document.getElementById('dataTable').addEventListener('change', function() {
         var table = document.getElementById('dataTable');
@@ -308,38 +271,71 @@
     };
 </script>
 <script th:inline="javascript">
-    function addDoctor() {
-        var name = document.getElementById('newDoctorName').value;
-        var amount = document.getElementById('newDoctorAmount').value;
-        var hours = document.getElementById('newDoctorHours').value;
+    // Zmiana etykiet na nazwiska lekarzy
+    var labels = /*[[${doctors.![name]}]]*/;
+    var amounts = /*[[${doctors.![amount]}]]*/;
+    var hourlyRates = /*[[${doctors.![amount div hours]}]]*/;
 
-        if (name && amount && hours) {
-            // Dodanie wiersza do tabeli
-            var table = document.getElementById('dataTable').getElementsByTagName('tbody')[0];
-            var newRow = table.insertRow(table.rows.length);
-            var cols = [];
+    // Utworzenie tablicy lekarzy zawierającej identyfikatory
+    var doctors = /*[[${doctors}]]*/;
 
-            cols.push(newRow.insertCell(0));
-            cols.push(newRow.insertCell(1));
-            cols.push(newRow.insertCell(2));
-            cols.push(newRow.insertCell(3));
-            cols.push(newRow.insertCell(4));
+    // Sortowanie lekarzy po stawce godzinowej (od największej do najmniejszej)
+    var sortedDoctors = [...labels.map((_, index) => ({ id: doctors[index].id, name: labels[index], amount: amounts[index], hours: hourlyRates[index] }))]
+        .sort((a, b) => b.hours - a.hours);
 
-            cols[0].innerHTML = '<input type="text" value="' + new Date().toISOString().split('T')[0] + '" name="data" placeholder="Enter date">';
-            cols[1].innerHTML = '<input type="text" value="' + name + '" name="lekarz" placeholder="Enter doctor">';
-            cols[2].innerHTML = '<input type="number" value="' + amount + '" name="kwota" placeholder="Enter amount">';
-            cols[3].innerHTML = '<input type="number" value="' + hours + '" name="godziny" placeholder="Enter hours">';
-            cols[4].innerHTML = amount / hours;
+    // Przygotowanie danych do wykresu
+    var data = {
+        labels: sortedDoctors.map(doctor => doctor.name),
+        datasets: [{
+            label: 'Amount collected by doctors in the month',
+            data: sortedDoctors.map(doctor => doctor.amount),
+            backgroundColor: [
+                'rgba(255, 99, 132, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(255, 206, 86, 0.2)',
+                'rgba(75, 192, 192, 0.2)',
+                'rgba(153, 102, 255, 0.2)'
+            ],
+            borderColor: [
+                'rgba(255, 99, 132, 1)',
+                'rgba(54, 162, 235, 1)',
+                'rgba(255, 206, 86, 1)',
+                'rgba(75, 192, 192, 1)',
+                'rgba(153, 102, 255, 1)'
+            ],
+            borderWidth: 1
+        }]
+    };
 
-            // Dodanie danych do wykresu
-            data.labels.push(name);
-            data.datasets[0].data.push(parseInt(amount));
-            myChart.update(); // Aktualizacja wykresu
-        } else {
-            alert('Please fill in all fields.');
+    // Inicjalizacja wykresu
+    var ctx = document.getElementById('myChart').getContext('2d');
+    var myChart = new Chart(ctx, {
+        type: 'bar',
+        data: data,
+        options: {
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero: true
+                    }
+                }]
+            }
+        }
+    });
+
+    // Funkcja wywoływana po kliknięciu na słupku wykresu
+    function handleBarClick(event) {
+        var activeElement = myChart.getElementAtEvent(event)[0];
+        if (activeElement) {
+            var doctorId = sortedDoctors[activeElement._index].id;
+            window.location.href = '/doctorDetails?id=' + doctorId; // Przekierowanie do listy lekarzy z pozycją danego lekarza
         }
     }
+
+    // Nasłuchiwanie na kliknięcia na wykresie
+    document.getElementById('myChart').onclick = handleBarClick;
 </script>
+
 
 </body>
 </html>

@@ -61,6 +61,11 @@
 			<artifactId>spring-data-commons</artifactId>
 			<version>3.2.4</version>
 		</dependency>
+		<dependency>
+			<groupId>org.hibernate.validator</groupId>
+			<artifactId>hibernate-validator</artifactId>
+			<version>6.2.0.Final</version> <!-- Wybierz najnowszą dostępną wersję -->
+		</dependency>
 	</dependencies>
 	<build>
 		<plugins>

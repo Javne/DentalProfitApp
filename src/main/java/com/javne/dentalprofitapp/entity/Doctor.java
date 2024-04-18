@@ -15,10 +15,7 @@ setHourlyRate(BigDecimal hourlyRate): Ustawia stawkę godzinową.
 Inne standardowe metody dostępowe za pomoca lomboka(gettery, settery).*/
 
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import jakarta.persistence.*;
 import java.math.BigDecimal;
@@ -48,6 +45,7 @@ public class Doctor {
     private String name;
     private BigDecimal amount;
     private double hours;
+    @Setter
     private BigDecimal hourlyRate;
 
 
@@ -66,9 +64,4 @@ public class Doctor {
         }
         return amount.divide(BigDecimal.valueOf(hours), 2, RoundingMode.HALF_UP);
     }
-
-    public void setHourlyRate(BigDecimal hourlyRate) {
-        this.hourlyRate = hourlyRate;
-    }
-
 }

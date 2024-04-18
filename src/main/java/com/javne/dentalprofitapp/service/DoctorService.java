@@ -73,19 +73,17 @@ public class DoctorService {
 
     @Transactional
     public void addDoctor(DoctorDTO doctorDTO) {
+        Doctor doctor = mapDoctorDTOtoDoctor(doctorDTO);
+        doctorRepository.save(doctor);
+    }
+
+    private Doctor mapDoctorDTOtoDoctor(DoctorDTO doctorDTO) {
         Doctor doctor = new Doctor();
         doctor.setName(doctorDTO.getName());
         doctor.setAmount(doctorDTO.getAmount());
         doctor.setHours(doctorDTO.getHours().doubleValue());
-        doctor.setDate(new Date());
-        doctor.setDeleted(false);
-
-        BigDecimal hourlyRate = calculateHourlyRate(doctor.getAmount(), doctor.getHours());
-        doctor.setHourlyRate(hourlyRate);
-
-        doctorRepository.save(doctor);
+        return doctor;
     }
-
 
 
     private Integer findNextAvailableId() {
