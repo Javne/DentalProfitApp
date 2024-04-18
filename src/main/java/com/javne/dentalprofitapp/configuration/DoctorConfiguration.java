@@ -2,6 +2,9 @@ package com.javne.dentalprofitapp.configuration;
 
 import com.javne.dentalprofitapp.entity.Doctor;
 import com.javne.dentalprofitapp.repository.DoctorRepository;
+import io.swagger.v3.oas.models.OpenAPI;
+import io.swagger.v3.oas.models.info.Contact;
+import io.swagger.v3.oas.models.info.Info;
 import lombok.AllArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
@@ -49,5 +52,15 @@ public class DoctorConfiguration {
         }
 
         return doctors;
+    }
+
+    @Bean
+    public OpenAPI openAPI() {
+        return new OpenAPI()
+                .info(new Info().title("DentalProfitApp").version("1.0").description("FirstRestApi")
+                        .contact(new Contact()
+                                .name("Ewelina Borkowska")
+                                .url("https://github.com/Javne/DentalProfitApp.git")
+                                .email("javaczysen@gmail.com")));
     }
 }
