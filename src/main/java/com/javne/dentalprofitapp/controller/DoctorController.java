@@ -1,8 +1,8 @@
 package com.javne.dentalprofitapp.controller;
 
 import com.javne.dentalprofitapp.entity.Doctor;
-import com.javne.dentalprofitapp.repository.DoctorRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.javne.dentalprofitapp.entity.DoctorDTO;
+import com.javne.dentalprofitapp.service.DoctorService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -16,110 +16,52 @@ import java.util.Optional;
 @RequestMapping("/doctors")
 public class DoctorController {
 
-    private final DoctorRepository doctorRepository;
+    private final DoctorService doctorService;
 
-    @Autowired
-    public DoctorController(DoctorRepository doctorRepository) {
-        this.doctorRepository = doctorRepository;
+    public DoctorController(DoctorService doctorService) {
+        this.doctorService = doctorService;
     }
+
     @GetMapping("/home")
     public String home(Model model) {
-        List<Doctor> doctors = doctorRepository.findAll();
-        model.addAttribute("doctors", doctors);
+        model.addAttribute("doctors", doctorService.getAllDoctorsSortedByHourlyRateDescending());
         return "home";
     }
-
-
-    @GetMapping("/bestPaidPerHour")
-    public String getBestPaidDoctorPerHour(Model model) {
-        Optional<Doctor> bestPaidDoctor = doctorRepository.findBestPaidDoctorPerHour();
-        bestPaidDoctor.ifPresent(doctor -> model.addAttribute("bestPaidDoctor", doctor));
-
-        List<Doctor> doctors = doctorRepository.findAll();
-        model.addAttribute("doctors", doctors); // Dodaj ten wiersz
-
-        return "home";
-    }
-
-
 
     @GetMapping("")
-    public List<Doctor> getAllDoctors() {
-        return doctorRepository.findAll();
+    public ResponseEntity<List<Doctor>> getAllDoctors() {
+        List<Doctor> doctors = doctorService.getAllDoctors();
+        return ResponseEntity.ok(doctors);
     }
 
-    @GetMapping("/byName/{name}")
-    public ResponseEntity<Doctor> getDoctorByName(@PathVariable String name) {
-        Optional<Doctor> optionalDoctor = doctorRepository.findByName(name);
-        return optionalDoctor.map(ResponseEntity::ok)
-                .orElseGet(() -> ResponseEntity.notFound().build());
-    }
-
-    @GetMapping("/byId/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<Doctor> getDoctorById(@PathVariable int id) {
-        Optional<Doctor> optionalDoctor = doctorRepository.findById(id);
-        return optionalDoctor.map(ResponseEntity::ok)
-                .orElseGet(() -> ResponseEntity.notFound().build());
-    }
-
-    @PostMapping("")
-    public ResponseEntity<List<Doctor>> addDoctors(@RequestBody List<Doctor> doctors) {
-        List<Doctor> savedDoctors = doctorRepository.saveAll(doctors);
-        return ResponseEntity.status(HttpStatus.CREATED).body(savedDoctors);
+        Optional<Doctor> optionalDoctor = doctorService.findDoctorById(id);
+        return optionalDoctor.map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
     }
 
     @PostMapping("/addDoctor")
-    public ResponseEntity<String> addDoctor(@RequestBody Doctor doctor) {
-        Doctor deletedDoctor = doctorRepository.findFirstDeletedDoctorOrderByDateAsc();
-        if (deletedDoctor != null) {
-            deletedDoctor.setDate(doctor.getDate());
-            deletedDoctor.setName(doctor.getName());
-            deletedDoctor.setAmount(doctor.getAmount());
-            deletedDoctor.setHours(doctor.getHours());
-            deletedDoctor.setDeleted(false);
-            doctorRepository.save(deletedDoctor);
-        } else {
-            doctorRepository.save(doctor);
-        }
-
-        return ResponseEntity.ok("Doctor added successfully");
-    }
-
-    @PutMapping("/byName/{name}")
-    public ResponseEntity<String> updateDoctor(@PathVariable String name, @RequestBody Doctor updatedDoctor) {
-        Optional<Doctor> optionalDoctor = doctorRepository.findByName(name);
-        if (optionalDoctor.isPresent()) {
-            Doctor doctor = optionalDoctor.get();
-            doctor.setName(updatedDoctor.getName());
-            doctor.setDate(updatedDoctor.getDate());
-            doctor.setAmount(updatedDoctor.getAmount());
-            doctor.setHours(updatedDoctor.getHours());
-            doctorRepository.save(doctor);
-            return ResponseEntity.ok("Doctor updated");
-        } else {
-            return ResponseEntity.notFound().build();
+    public ResponseEntity<String> addDoctor(@RequestBody DoctorDTO doctorDTO) {
+        try {
+            doctorService.addDoctor(doctorDTO);
+            return new ResponseEntity<>("Doctor added successfully", HttpStatus.CREATED);
+        } catch (Exception e) {
+            return new ResponseEntity<>("Failed to add doctor", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
-    @DeleteMapping("/byName/{name}")
-    public ResponseEntity<String> deleteDoctorByName(@PathVariable String name) {
-        Optional<Doctor> optionalDoctor = doctorRepository.findByName(name);
-        if (optionalDoctor.isPresent()) {
-            doctorRepository.delete(optionalDoctor.get());
-            return ResponseEntity.ok("Doctor deleted");
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteDoctorById(@PathVariable int id) {
+        boolean isDeleted = doctorService.deleteDoctorById(id);
+        return isDeleted ? ResponseEntity.ok().build() : ResponseEntity.notFound().build();
     }
 
-
-    @DeleteMapping("/byId/{id}")
-    public ResponseEntity<String> deleteDoctorById(@PathVariable int id) {
-        if (doctorRepository.existsById(id)) {
-            doctorRepository.deleteById(id);
-            return ResponseEntity.ok("Doctor deleted");
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+    private Doctor mapDoctorDTOtoDoctor(DoctorDTO doctorDTO) {
+        Doctor doctor = new Doctor();
+        doctor.setName(doctorDTO.getName());
+        doctor.setAmount(doctorDTO.getAmount());
+        doctor.setHours(doctorDTO.getHours().doubleValue());
+        return doctor;
     }
+
 }

@@ -1,11 +1,14 @@
 package com.javne.dentalprofitapp.entity;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import jakarta.persistence.*;
-import lombok.*;
-
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Date;
-
 
 @Entity
 @Table
@@ -30,16 +33,27 @@ public class Doctor {
     private String name;
     private BigDecimal amount;
     private double hours;
+    private BigDecimal hourlyRate;
 
-    // Dodajemy pole, które będzie określało, czy dany lekarz został usunięty
+
     private Boolean deleted = false;
 
-    // Dodajemy konstruktor, który będzie używany do tworzenia nowego lekarza na puste lub kolejne miejsce
     public Doctor(Date date, String name, BigDecimal amount, double hours) {
         this.date = date;
         this.name = name;
         this.amount = amount;
         this.hours = hours;
+    }
+
+    public BigDecimal getHourlyRate() {
+        if (hours == 0) {
+            return BigDecimal.ZERO;
+        }
+        return amount.divide(BigDecimal.valueOf(hours), 2, RoundingMode.HALF_UP);
+    }
+
+    public void setHourlyRate(BigDecimal hourlyRate) {
+        this.hourlyRate = hourlyRate;
     }
 
 }
