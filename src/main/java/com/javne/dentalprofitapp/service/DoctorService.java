@@ -7,15 +7,15 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.Comparator;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import java.math.BigDecimal;
 
-/*Klasa DoctorService
+/*
+Klasa DoctorService
 Opis: Warstwa serwisowa do obsługi logiki biznesowej związanej z lekarzami.
 Metody:
 getAllDoctors(): Zwraca listę wszystkich lekarzy.
